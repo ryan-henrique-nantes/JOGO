@@ -1,22 +1,21 @@
 import pygame
 from pygame.sprite import RenderUpdates
 from configuracao import *
-from utils import UiComponente
+from utils import UiBotao, UiLabel
 
 class Menu:
-  def __init__(self):
+  def __init__(self, tela: pygame.Surface):
     #pega a superfice de display
     self.display_surface = pygame.display.get_surface()
     self.todos_sprites = pygame.sprite.Group()
-    self.setup()
+    self.setup(tela.get_rect())
 
-  def setup(self):
-    centro_X = ((LARGURA_TELA / 2) - (10 / 2))
-    centro_Y = ((ALTURA_TELA / 2) - (10 / 2))  
-    self.botao_iniciar = UiComponente((centro_X, centro_Y), "Iniciar", "Courier", 30, AZUL, BRANCO, EstadoJogo.NOVO_JOGO)
-    self.botao_sair = UiComponente((centro_X, centro_Y - 100), "Sair", "Courier", 30, AZUL, BRANCO, EstadoJogo.SAIR)     
+  def setup(self, rect: pygame.Rect): 
+    self.titulo = UiLabel(rect, "Fluxo Escape", "Courier", 50, BRANCO, AZUL, 600)
+    self.botao_iniciar = UiBotao(rect, "Iniciar", "Courier", 30, AZUL, BRANCO, 300, EstadoJogo.NOVO_JOGO)
+    self.botao_sair = UiBotao(rect, "Sair", "Courier", 30, AZUL, BRANCO, 250, EstadoJogo.SAIR)     
 
-    self.botoes = RenderUpdates(self.botao_iniciar, self.botao_sair)
+    self.botoes = RenderUpdates(self.titulo, self.botao_iniciar, self.botao_sair)
 
   def run(self):
     mouse_up = False

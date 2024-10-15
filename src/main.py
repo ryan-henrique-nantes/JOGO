@@ -24,10 +24,12 @@ class Jogo:
         if evento.type == pygame.QUIT:
           pygame.quit()
           sys.exit()
+        self.nivel.handle_events(evento)
 
       dt = self.clock.tick() / 1000
       self.nivel.run(dt)
       pygame.display.update()
+      pygame.display.flip()
 
 if __name__ == '__main__':
   jogo = Jogo()

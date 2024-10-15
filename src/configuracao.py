@@ -16,6 +16,10 @@ class EstadoJogo(Enum):
     MONTANDO = 5
     EXECUTANDO = 6
 
+class EstadoBotao(Enum):
+    PLAY = 0
+    STOP = 1
+
 # Posicoes Camada
 CAMADAS = {
     'vazio': 0,
@@ -31,3 +35,4 @@ VERDE = (0, 255, 0)
 VERMELHO = (255, 0, 0)
 CINZA = (128, 128, 128)
 ROXO = (128, 0, 128, 255)
+VERDE_ESCURO = (0, 150, 0)

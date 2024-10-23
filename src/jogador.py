@@ -28,8 +28,7 @@ class Jogador(pygame.sprite.Sprite):
     self.collisao_sprites = collisao_sprites
     self.hitbox = self.rect.copy()
 
-    self.items = []
-    self.item_index = 0
+    self.items = {}
     self.item_selecionado = None
     self.objeto_interagivel_proximo = None
 
@@ -71,13 +70,6 @@ class Jogador(pygame.sprite.Sprite):
     else:
       self.direcao.x = 0
 
-    if teclas[pygame.K_q] and not self.timers['troca item'].ativar:
-      self.timers['troca item'].ativar()
-      self.item_index += 1
-      self.item_index = self.item_index if self.item_index < len(self.tools) else 0
-      
-      self.item_selecionado = self.items[self.item_index] if len(self.items) > 0 else None
-    
     if teclas[pygame.K_e] and self.objeto_interagivel_proximo:
       self.interagir()
 
@@ -85,6 +77,13 @@ class Jogador(pygame.sprite.Sprite):
     if hasattr(self.objeto_interagivel_proximo, 'interagivel'):
       if self.objeto_interagivel_proximo.interagivel:
         self.objeto_interagivel_proximo.interagir(self)
+
+  def adicionar_item(self, item):
+    nome_item = type(item).__name__
+    if nome_item in self.items:
+      self.items[nome_item] += 1
+    else:
+      self.items[nome_item] = 1
 
   def pegar_status(self):
     if self.direcao.magnitude() == 0:
@@ -146,6 +145,15 @@ class Jogador(pygame.sprite.Sprite):
       text = font.render('E - Pegar/Interagir', True, (255, 255, 255))
       text_rect = text.get_rect(bottomright=(surface.get_width() - 10, surface.get_height() - 10))
       surface.blit(text, text_rect)
+
+  def desenhar_itens(self, surface):
+    font = pygame.font.Font(None, 36)
+    x, y = surface.get_width() - 10, 10
+    for item, quantidade in self.items.items():
+      text = font.render(f'{item} x {quantidade}', True, (255, 255, 255))
+      text_rect = text.get_rect(topright=(x, y))
+      surface.blit(text, text_rect)
+      y += text_rect.height + 5
 
   def update(self, dt):
     self.input()

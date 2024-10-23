@@ -24,7 +24,7 @@ class Bau(Generic):
   def interagir(self, jogador):
     self.aberto = True
     if self.item != None:
-      jogador.items.append(self.item)
+      jogador.adicionar_item(self.item)
       self.item = None
 
   def update(self, *args):
@@ -43,7 +43,7 @@ class Pecas(Generic):
     self.interagivel = True
 
   def interagir(self, jogador):
-    jogador.items.append(self)
+    jogador.adicionar_item(self)
     self.interagivel = False
     self.kill()
 

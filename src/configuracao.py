@@ -1,30 +1,45 @@
 # tela
 import tkinter as tk
+from pygame.math import Vector2
+
 ALTURA_TELA = tk.Tk().winfo_screenheight() - 200
 LARGURA_TELA = tk.Tk().winfo_screenwidth() - 200
-TAMANHO = 64
+TAMANHO = 32
 
 # Estado do jogo
 from enum import Enum
 class EstadoJogo(Enum):
     SAIR = -1
     TITULO = 0
-    NOVO_JOGO = 1
-    PROXIMO_NIVEL = 2
-    PAUSADO = 3
-    JOGANDO = 4
-    MONTANDO = 5
-    EXECUTANDO = 6
+    NIVEL1 = 1
+    NIVEL2 = 2
+    NIVEL3 = 3
+    PAUSADO = 4
+    JOGANDO = 5
+    PUZZLE = 6
+    
 
 class EstadoBotao(Enum):
     PLAY = 0
     STOP = 1
 
-# Posicoes Camada
 CAMADAS = {
-    'vazio': 0,
-    'chao': 1,
-    'gui': 2
+	'void': 0,
+	'ground': 1,
+	'main': 2
+}
+
+# overlay positions 
+OVERLAY_POSITIONS = {
+	'item' : (40, ALTURA_TELA - 15), 
+}
+
+
+ALCANCE = {
+    'left': Vector2(-20, 0),
+    'right': Vector2(20, 0),
+    'up': Vector2(0, -20),
+    'down': Vector2(0, 20)
 }
 
 # Cores

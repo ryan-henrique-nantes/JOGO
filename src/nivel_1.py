@@ -1,36 +1,51 @@
-import pygame
+import pygame 
 from configuracao import *
 from jogador import Jogador
-from player_movement import UiBarraPrincipal, UiInicioAcao, UiBotaoIniciar, UiAvancar
+from overlay import Overlay
+from sprites import Generic, Bau, Puzzle, Pecas, Porta, Parede
+from camera import CameraGroup
+from pytmx.util_pygame import load_pygame
 
 class Nivel_1:
-  def __init__(self):
-    self.display_surface = pygame.display.get_surface()
-    self.todos_sprites = pygame.sprite.Group()
-    self.setup()
-    
-  def setup(self):
-    self.jogador = Jogador((640, 360), self.todos_sprites)
-    self.barra_principal = UiBarraPrincipal()
-    self.inicio_acao = UiInicioAcao(self.barra_principal)
-    self.botao_iniciar = UiBotaoIniciar(self.barra_principal)
-    self.componentes = [self.inicio_acao, UiAvancar(self.barra_principal.x, self.barra_principal.y + self.barra_principal.altura + 20, self.inicio_acao.largura, self.barra_principal.altura - 2 * self.barra_principal.padding)]
+    def __init__(self):
+        self.display_surface = pygame.display.get_surface()
+        self.all_sprites = CameraGroup()
+        self.collisao_sprites = pygame.sprite.Group()
 
-  def handle_events(self, evento: pygame.event.Event):
-    self.botao_iniciar.handle_input(evento)
-    for componente in self.componentes:
-      if isinstance(componente, UiAvancar):
-        componente.handle_input(evento, self.componentes)
-      else:
-        componente.handle_input(evento)
+        self.setup()
+        self.overlay = Overlay(self.jogador)
 
-  def run(self, dt):
-    self.display_surface.fill('black')
-    self.todos_sprites.draw(self.display_surface)
-    self.barra_principal.draw(tela=self.display_surface)
-    self.botao_iniciar.draw(tela=self.display_surface) 
-    for componente in self.componentes:
-      componente.draw(tela=self.display_surface)
-    #self.jogador.handle_input()
-    #self.jogador.update_position()
-    self.todos_sprites.update()
+    def setup(self):
+      tmx_data  = load_pygame('./data/nivel1.tmx')     
+
+      for camada in ['chão']:
+        for x, y, surf in tmx_data.get_layer_by_name(camada).tiles():
+          Generic((x * TAMANHO, y * TAMANHO), surf, self.all_sprites, CAMADAS['ground'])
+
+      for camada in ['puzzle']:
+        for x, y, surf in tmx_data.get_layer_by_name(camada).tiles():
+          Puzzle((x * TAMANHO, y * TAMANHO), surf, [self.all_sprites, self.collisao_sprites], CAMADAS['ground'])
+
+      for camada in ['porta']:
+        for x, y, surf in tmx_data.get_layer_by_name(camada).tiles():
+          Porta((x * TAMANHO, y * TAMANHO), surf, [self.all_sprites, self.collisao_sprites], CAMADAS['main'])
+
+      for camada in ['parede', 'enfeites', 'grade da porta']:
+        for x, y, surf in tmx_data.get_layer_by_name(camada).tiles():
+          Parede((x * TAMANHO, y * TAMANHO), surf, [self.all_sprites, self.collisao_sprites], CAMADAS['main'])
+
+      for camada in ['peça A', 'peça B', 'peça C']:
+        for x, y, surf in tmx_data.get_layer_by_name(camada).tiles():
+          Pecas((x * TAMANHO, y * TAMANHO), surf, [self.all_sprites, self.collisao_sprites], CAMADAS['ground'])
+
+      for camada in ['bau']:
+        for x, y, surf in tmx_data.get_layer_by_name(camada).tiles():
+          Bau((x * TAMANHO, y * TAMANHO), surf, [self.all_sprites, self.collisao_sprites], CAMADAS['main'])
+      self.jogador = Jogador((465, 555), self.all_sprites, self.collisao_sprites)
+
+
+    def run(self, dt):
+        self.display_surface.fill('black')
+        self.all_sprites.custom_draw(self.jogador)
+        self.all_sprites.update(dt)
+        self.overlay.display()

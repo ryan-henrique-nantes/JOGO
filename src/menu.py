@@ -12,7 +12,7 @@ class Menu:
 
   def setup(self, rect: pygame.Rect): 
     self.titulo = UiLabel(rect, "Fluxo Escape", "Courier", 50, BRANCO, AZUL, 600)
-    self.botao_iniciar = UiBotao(rect, "Iniciar", "Courier", 30, AZUL, BRANCO, 300, EstadoJogo.NOVO_JOGO)
+    self.botao_iniciar = UiBotao(rect, "Iniciar", "Courier", 30, AZUL, BRANCO, 300, EstadoJogo.NIVEL1)
     self.botao_sair = UiBotao(rect, "Sair", "Courier", 30, AZUL, BRANCO, 250, EstadoJogo.SAIR)     
 
     self.botoes = RenderUpdates(self.titulo, self.botao_iniciar, self.botao_sair)

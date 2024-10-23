@@ -10,27 +10,34 @@ class Jogo:
     pygame.display.set_caption('Fluxo Escape')
     self.clock = pygame.time.Clock()
     self.menu = Menu(self.tela)
-    self.estado_jogo = self.menu.run()
+    self.nivel1 = Nivel_1()
+    self.estado_jogo = 0
+
+  def run(self):
+    if self.estado_jogo == 0:
+      self.estado_jogo = self.menu.run()
     if self.estado_jogo == EstadoJogo.SAIR:
       pygame.quit()
       sys.exit()
-    else:
-      self.nivel = Nivel_1()
-      self.run()
-
-  def run(self):
     while True:
-      for evento in pygame.event.get():
-        if evento.type == pygame.QUIT:
+      for event in pygame.event.get():
+        if event.type == pygame.QUIT:
           pygame.quit()
           sys.exit()
-        self.nivel.handle_events(evento)
-
+      
       dt = self.clock.tick() / 1000
-      self.nivel.run(dt)
+      match self.estado_jogo:
+        case EstadoJogo.NIVEL1:
+          self.nivel1.run(dt)
+        case EstadoJogo.NIVEL2:
+          break
+        case EstadoJogo.NIVEL3:
+          break
+        case EstadoJogo.SAIR:
+          pygame.quit()
+          sys.exit()   
       pygame.display.update()
-      pygame.display.flip()
-
+            
 if __name__ == '__main__':
   jogo = Jogo()
   jogo.run()

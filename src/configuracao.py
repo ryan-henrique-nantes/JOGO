@@ -6,6 +6,7 @@ ALTURA_TELA = tk.Tk().winfo_screenheight() - 200
 LARGURA_TELA = tk.Tk().winfo_screenwidth() - 200
 TAMANHO = 32
 
+
 # Estado do jogo
 from enum import Enum
 class EstadoJogo(Enum):
@@ -18,6 +19,8 @@ class EstadoJogo(Enum):
     JOGANDO = 5
     PUZZLE = 6
     
+global estado_jogo 
+estado_jogo = EstadoJogo.TITULO
 
 class EstadoBotao(Enum):
     PLAY = 0
@@ -26,7 +29,9 @@ class EstadoBotao(Enum):
 CAMADAS = {
 	'void': 0,
 	'ground': 1,
-	'main': 2
+	'main': 2,
+  'base_puzzle': 3,
+  'puzzle': 4,
 }
 
 # overlay positions 

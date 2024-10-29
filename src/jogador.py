@@ -2,7 +2,7 @@ import pygame
 from configuracao import *
 from suporte import *
 from timer import Timer
-from sprites import Bau, Pecas, Puzzle, Parede, Generic
+from sprites import Generic, Porta
 
 class Jogador(pygame.sprite.Sprite):
   def __init__(self, posicao, group, collisao_sprites: list[Generic]):
@@ -29,6 +29,7 @@ class Jogador(pygame.sprite.Sprite):
     self.hitbox = self.rect.copy()
 
     self.items = {}
+    self.itens = []
     self.item_selecionado = None
     self.objeto_interagivel_proximo = None
 
@@ -48,6 +49,9 @@ class Jogador(pygame.sprite.Sprite):
       self.frame_index = 0
 
     self.image = self.animacoes[self.status][int(self.frame_index)]
+
+  def estado_jogo(self, estado_jogo):
+    self.estado_jogo = estado_jogo
 
   def input(self):
     teclas = pygame.key.get_pressed()
@@ -79,6 +83,7 @@ class Jogador(pygame.sprite.Sprite):
         self.objeto_interagivel_proximo.interagir(self)
 
   def adicionar_item(self, item):
+    self.itens.append(item)
     nome_item = type(item).__name__
     if nome_item in self.items:
       self.items[nome_item] += 1

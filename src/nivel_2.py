@@ -4,17 +4,17 @@ from jogador import Jogador
 from overlay import Overlay
 from sprites import Generic, Bau, Puzzle, Pecas, Porta, Parede, Grade
 from camera import CameraGroup
-from puzzle_1 import Puzzle_1
+from puzzle_2 import Puzzle_2
 from pytmx.util_pygame import load_pygame
 
-class Nivel_1:
+class Nivel_2:
   def __init__(self, jogo):
     self.display_surface = pygame.display.get_surface()
     self.all_sprites = CameraGroup()
     self.collisao_sprites = pygame.sprite.Group()
     self.porta = None
     self.jogo = jogo
-    self.tmx_data = load_pygame('./data/nivel1.tmx') 
+    self.tmx_data = load_pygame('./data/nivel2.tmx') 
     self.setup()
     self.overlay = Overlay(self.jogador)
 
@@ -23,30 +23,30 @@ class Nivel_1:
       for x, y, surf in self.tmx_data.get_layer_by_name(camada).tiles():
         Generic((x * TAMANHO, y * TAMANHO), surf, self.all_sprites, CAMADAS['ground'])
 
-    for camada in ['parede', 'enfeites']:
+    for camada in ['parede', 'enfeite', 'porta_entrada']:
       for x, y, surf in self.tmx_data.get_layer_by_name(camada).tiles():
         Parede((x * TAMANHO, y * TAMANHO), surf, [self.all_sprites, self.collisao_sprites], CAMADAS['main'])
 
-    for camada in ['porta']:
+    for camada in ['porta_saida']:
       for x, y, surf in self.tmx_data.get_layer_by_name(camada).tiles():
         self.porta = Porta((x * TAMANHO, y * TAMANHO), surf, [self.all_sprites, self.collisao_sprites], self, CAMADAS['main'])
 
-    for camada in ['grade da porta']:
+    for camada in ['grade']:
       for x, y, surf in self.tmx_data.get_layer_by_name(camada).tiles():
         self.grade = Grade((x * TAMANHO, y * TAMANHO), surf, [self.all_sprites, self.collisao_sprites], CAMADAS['main'])
 
     for camada in ['puzzle']:
       for x, y, surf in self.tmx_data.get_layer_by_name(camada).tiles():
-        Puzzle((x * TAMANHO, y * TAMANHO), surf, [self.all_sprites, self.collisao_sprites], Puzzle_1, self.grade, CAMADAS['ground'])
+        Puzzle((x * TAMANHO, y * TAMANHO), surf, [self.all_sprites, self.collisao_sprites], Puzzle_2, self.grade, CAMADAS['ground'])
 
-    for camada in ['peca AB1', 'peca AB2', 'peca C']:
+    for camada in ['peca A', 'peca B', 'peca C']:
       for x, y, surf in self.tmx_data.get_layer_by_name(camada).tiles():
         Pecas((x * TAMANHO, y * TAMANHO), surf, [self.all_sprites, self.collisao_sprites], camada, CAMADAS['ground'])
 
     for camada in ['bau']:
       for x, y, surf in self.tmx_data.get_layer_by_name(camada).tiles():
         Bau((x * TAMANHO, y * TAMANHO), surf, [self.all_sprites, self.collisao_sprites], CAMADAS['main'])
-    self.jogador = Jogador((465, 555), self.all_sprites, self.collisao_sprites)
+    self.jogador = Jogador((205, 255), self.all_sprites, self.collisao_sprites)
     
   def run(self, dt):
     self.display_surface.fill('black')

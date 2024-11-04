@@ -13,29 +13,10 @@ class Parede(Generic):
     super().__init__(pos, surf, groups, z)
     self.hitbox = self.rect.copy()
 
-class Bau(Generic):
-  def __init__(self, pos, surf, groups, z = CAMADAS['main'], item = None):
-    super().__init__(pos, surf, groups, z)
-    self.aberto = False
-    self.item = item
-    self.interagivel = True
-    self.hitbox = self.rect.copy()
-
-  def interagir(self, jogador):
-    self.aberto = True
-    if self.item != None:
-      jogador.adicionar_item(self.item)
-      self.item = None
-
-  def update(self, *args):
-    if self.aberto:
-      self.interagivel = False
-      self.image = pygame.image.load('./sprites/objeto/bau_aberto.png')
-  
 class Porta(Generic):
   def __init__(self, pos, surf, groups, nivel, z = CAMADAS['main']):
     super().__init__(pos, surf, groups, z)
-    self.interagivel = True  # Porta não interagível inicialmente
+    self.interagivel = False  # Porta não interagível inicialmente
     self.nivel_atual = nivel
     self.hitbox = self.rect.copy()
 
@@ -44,16 +25,23 @@ class Porta(Generic):
       return
     match self.nivel_atual.jogo.estado_jogo:
       case EstadoJogo.NIVEL1:
+        self.nivel_atual.jogo.estado_jogo_anterior = EstadoJogo.NIVEL1
         self.nivel_atual.jogo.estado_jogo = EstadoJogo.NIVEL2
       case EstadoJogo.NIVEL2:
+        self.nivel_atual.jogo.estado_jogo_anterior = EstadoJogo.NIVEL2
         self.nivel_atual.jogo.estado_jogo = EstadoJogo.NIVEL3
       case EstadoJogo.NIVEL3:
+        self.nivel_atual.jogo.estado_jogo_anterior = EstadoJogo.NIVEL3
         self.nivel_atual.jogo.estado_jogo = EstadoJogo.SAIR
 
 class Grade(Parede):
-  def __init__(self, pos, surf, groups, z = CAMADAS['main']):
+  def __init__(self, pos, surf, groups, porta, z = CAMADAS['main']):
     super().__init__(pos, surf, groups, z)
-    
+    self.porta = porta
+
+  def liberar_porta(self):
+    for porta in self.porta:
+      porta.interagivel = True
 
 class Pecas(Generic):
   def __init__(self, pos, surf, groups, nome, z = CAMADAS['main']):
@@ -78,12 +66,10 @@ class Puzzle(Generic):
   def interagir(self, jogador):
     if self.puzzle is not None:
       if self.puzzle(jogador).run():
-        self.grade.kill()
+        for grade in self.grade:
+          grade.liberar_porta()
+          grade.kill()
   
-  def grade(self, grade):
-    if self.puzzle is not None:
-      self.grade = grade
-
 class EncPeca(Generic):
   def __init__(self, pos, surf, groups, nome: str, z=CAMADAS['main']):
     super().__init__(pos, surf, groups, z)
@@ -92,6 +78,8 @@ class EncPeca(Generic):
     self.posicao_correta = False
 
 class PecasMovel(Pecas):
+  dragging_piece = None  # Variável de classe para rastrear a peça sendo arrastada
+
   def __init__(self, pos, surf, groups, nome: str, encaixes: list[EncPeca], z=CAMADAS['main']):
     super().__init__(pos, surf, groups, nome, z)
     self.dragging = False
@@ -107,20 +95,34 @@ class PecasMovel(Pecas):
       if not mouse_buttons[0]:  # Se o botão do mouse não estiver pressionado
         self.stop_drag()
     else:
-      if mouse_buttons[0] and self.rect.collidepoint(mouse_pos):
+      if mouse_buttons[0] and self.rect.collidepoint(mouse_pos) and PecasMovel.dragging_piece is None:
         self.start_drag(mouse_pos)
 
   def start_drag(self, mouse_pos):
     self.dragging = True
+    PecasMovel.dragging_piece = self  # Defina a peça sendo arrastada
     self.offset = pygame.math.Vector2(self.rect.center) - pygame.math.Vector2(mouse_pos)
 
   def stop_drag(self):
     self.dragging = False
+    PecasMovel.dragging_piece = None  # Limpe a peça sendo arrastada
     self.verificar_encaixe()
 
   def verificar_encaixe(self):
     for encaixe in self.encaixes:
       if self.rect.colliderect(encaixe.rect):
-        self.rect.left = encaixe.rect.left
+        self.rect.topleft = encaixe.rect.topleft
         if self.nome == encaixe.nome.replace('enc', ''):
           encaixe.posicao_correta = True
+        else:
+          encaixe.posicao_correta = False
+
+class Botao(Generic):
+  def __init__(self, pos, surf, groups, jogo, result, z=CAMADAS['main']):
+    super().__init__(pos, surf, groups, z)
+    self.jogo = jogo
+    self.result = result  
+
+  def interagir(self):
+    self.self.jogo.estado_jogo = self.jogo.estado_jogo
+    self.jogo.estado_jogo = self.result

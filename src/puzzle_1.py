@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import pygame
 from configuracao import *
 from camera import CameraGroup
@@ -9,16 +10,18 @@ import sys
 
 class Puzzle_1:
   def __init__(self, jogador: Jogador):
+    ajustar_resolucao()
     self.display_surface = pygame.display.get_surface()
     self.items = jogador.itens
     self.overlay = Overlay(jogador)
     self.all_sprites = CameraGroup()
-    self.bg_color = (0, 0, 0, 128)  # Semi-transparent black
-    self.close_button_rect = pygame.Rect(10, 10, 50, 30)
-    self.close_button_color = (255, 0, 0)  # Red color for close button
-    self.font = pygame.font.Font(None, 36)
     self.todos_encaixes = []
     self.setup()
+    self.bg_color = (0, 0, 0, 128)  # Semi-transparent black
+    self.close_button_center = (35, 35)
+    self.close_button_radius = 20
+    self.close_button_color = (255, 0, 0)  # Red color for close button
+    self.font = pygame.font.Font(None, 36)
     self.running = True
 
   def handle_event(self, event):
@@ -50,28 +53,64 @@ class Puzzle_1:
           PecasMovel((x * TAMANHO, y * TAMANHO), surf, [self.all_sprites], camada.nome.replace('2', '1'), self.todos_encaixes, CAMADAS['puzzle'])
 
   def run(self):
-    clock = pygame.time.Clock()
-    while self.running:
-      dt = clock.tick(60) / 1000  # Limitar a 60 FPS
+    running = True
+    while running:
+      dt = pygame.time.Clock().tick(60) / 1000
       for event in pygame.event.get():
         if event.type == pygame.QUIT:
           pygame.quit()
           sys.exit()
-        if self.handle_event(event):
-          for encaixe in self.todos_encaixes:
-            if not encaixe.posicao_correta:
-              break
+        if event.type == pygame.MOUSEBUTTONDOWN:
+          if self.is_close_button_clicked(event.pos):
+            for encaixe in self.todos_encaixes:
+              if not encaixe.posicao_correta:
+                return False
             return True
-
 
       self.display_surface.fill(self.bg_color)
       self.all_sprites.update(dt)
       self.all_sprites.custom_draw(self.display_surface)
       self.overlay.display()
 
-      # Desenhar o botão de fechar
-      pygame.draw.rect(self.display_surface, self.close_button_color, self.close_button_rect)
-      close_button_text = self.font.render('X', True, (255, 255, 255))
-      self.display_surface.blit(close_button_text, self.close_button_rect.topleft)
-
+      # Desenhar o botão de fechar como um círculo vermelho com um 'X'
+      pygame.draw.circle(self.display_surface, self.close_button_color, self.close_button_center, self.close_button_radius)
+      self.draw_close_button_x()
+      self.display_message("Este diagrama deve exibir um processo sequencial em que dois valores são recebidos e somados para calcular o resultado. A sequência é linear e segue passos ordenados. Ao final, o resultado da soma é exibido.")
       pygame.display.update()
+
+  def is_close_button_clicked(self, mouse_pos):
+    distance = pygame.math.Vector2(mouse_pos).distance_to(self.close_button_center)
+    return distance <= self.close_button_radius
+
+  def draw_close_button_x(self):
+    x, y = self.close_button_center
+    offset = self.close_button_radius // 2
+    pygame.draw.line(self.display_surface, (255, 255, 255), (x - offset, y - offset), (x + offset, y + offset), 2)
+    pygame.draw.line(self.display_surface, (255, 255, 255), (x + offset, y - offset), (x - offset, y + offset), 2)
+  
+  def display_message(self, message):
+    words = message.split(' ')
+    lines = []
+    current_line = []
+    max_width = LARGURA_TELA // 3  # Ajuste a largura máxima para 1/3 da tela
+    space_width, _ = self.font.size(' ')
+
+    for word in words:
+      word_width, word_height = self.font.size(word)
+      if sum(self.font.size(w)[0] for w in current_line) + space_width * len(current_line) + word_width <= max_width:
+        current_line.append(word)
+      else:
+        lines.append(' '.join(current_line))
+        current_line = [word]
+
+    if current_line:
+      lines.append(' '.join(current_line))
+
+    y = 80  # Ajuste a posição inicial para mais para baixo
+    line_spacing = 10  # Ajuste o espaçamento entre as linhas
+
+    for line in lines:
+      text_surface = self.font.render(line, True, (255, 255, 255))
+      text_rect = text_surface.get_rect(topright=(LARGURA_TELA - 10, y))
+      self.display_surface.blit(text_surface, text_rect)
+      y += word_height + line_spacing

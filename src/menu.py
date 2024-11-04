@@ -6,6 +6,7 @@ from utils import UiBotao, UiLabel
 class Menu:
   def __init__(self, tela: pygame.Surface):
     #pega a superfice de display
+    ajustar_resolucao()
     self.display_surface = pygame.display.get_surface()
     self.todos_sprites = pygame.sprite.Group()
     self.setup(tela.get_rect())

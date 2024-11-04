@@ -6,6 +6,17 @@ ALTURA_TELA = tk.Tk().winfo_screenheight() - 200
 LARGURA_TELA = tk.Tk().winfo_screenwidth() - 200
 TAMANHO = 32
 
+def ajustar_resolucao():
+  global ALTURA_TELA, LARGURA_TELA, TAMANHO
+
+# Obtenha a resolução da tela do usuário
+  root = tk.Tk()
+  ALTURA_TELA = root.winfo_screenheight() - 200
+  LARGURA_TELA = root.winfo_screenwidth() - 200
+  root.destroy()
+
+  # Ajuste o tamanho dos elementos do jogo conforme necessário
+  TAMANHO = min(ALTURA_TELA, LARGURA_TELA) // 20  # Exemplo de ajuste do tamanho dos elementos
 
 # Estado do jogo
 from enum import Enum

@@ -156,7 +156,7 @@ class Jogador(pygame.sprite.Sprite):
     x, y = surface.get_width() - 10, 10
     for item, quantidade in self.items.items():
       text = font.render(f'{item} x {quantidade}', True, (255, 255, 255))
-      text_rect = text.get_rect(topright=(x, y))
+      text_rect = text.get_rect(topright=(x, y + TAMANHO))
       surface.blit(text, text_rect)
       y += text_rect.height + 5
 

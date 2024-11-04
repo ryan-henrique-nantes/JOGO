@@ -1,10 +1,16 @@
 # -*- coding: utf-8 -*-
 import pygame, pygame.display, pygame.time, pygame.event, sys
 from configuracao import *
+import os
 from menu import Menu
 from nivel_1 import Nivel_1
 from nivel_2 import Nivel_2
 from nivel_3 import Nivel_3
+
+dirpath = os.getcwd()
+sys.path.append(dirpath)
+if getattr(sys, "frozen", False):
+    os.chdir(sys._MEIPASS)
 
 class Jogo:
   def __init__(self):
@@ -35,13 +41,15 @@ class Jogo:
       
       
       dt = self.clock.tick() / 1000
-      match self.estado_jogo:
+      match self.estado_jogo: 
         case EstadoJogo.NIVEL1:
           self.nivel1.run(dt)
         case EstadoJogo.NIVEL2:
           self.nivel2.run(dt)
         case EstadoJogo.NIVEL3:
           self.nivel3.run(dt)
+        case EstadoJogo.FINAL:
+          self.mostrar_tela_final()
         case EstadoJogo.SAIR:
           pygame.quit()
           sys.exit()   
@@ -85,6 +93,40 @@ class Jogo:
             esperando = False
 
     self.estado_jogo = EstadoJogo.NIVEL1
+
+  def mostrar_tela_final(self):
+    final_texto = (
+      "Parabéns! você completou os puzzles e conseguiu escapar do castelo assombrado"
+    )
+    fechar = "Pressione Enter para fechar o jogo"
+
+    self.tela.fill((0, 0, 0))
+    font = pygame.font.Font(None, 36)
+    y = 100
+
+    for line in self.wrap_text(final_texto, font, LARGURA_TELA - 40):
+      text_surface = font.render(line, True, (255, 255, 255))
+      text_rect = text_surface.get_rect(center=(LARGURA_TELA // 2, y))
+      self.tela.blit(text_surface, text_rect)
+      y += 40
+
+    continuar_surface = font.render(fechar, True, (255, 255, 255))
+    continuar_rect = continuar_surface.get_rect(center=(LARGURA_TELA // 2, y + 40))
+    self.tela.blit(continuar_surface, continuar_rect)
+
+    pygame.display.update()
+
+    # Espera até que a tecla 'Enter' ou 'Esc' seja pressionada
+    esperando = True
+    while esperando:
+      for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+          pygame.quit()
+          sys.exit()
+        if event.type == pygame.KEYDOWN:
+          if event.key in (pygame.K_RETURN, pygame.K_KP_ENTER):
+            pygame.quit()
+            sys.exit()
 
   def wrap_text(self, text, font, max_width):
     words = text.split(' ')

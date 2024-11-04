@@ -27,11 +27,7 @@ class EstadoJogo(Enum):
     NIVEL2 = 2
     NIVEL3 = 3
     PAUSADO = 4
-    JOGANDO = 5
-    PUZZLE = 6
-    
-global estado_jogo 
-estado_jogo = EstadoJogo.TITULO
+    FINAL = 5
 
 class EstadoBotao(Enum):
     PLAY = 0

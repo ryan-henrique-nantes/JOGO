@@ -32,7 +32,7 @@ class Porta(Generic):
         self.nivel_atual.jogo.estado_jogo = EstadoJogo.NIVEL3
       case EstadoJogo.NIVEL3:
         self.nivel_atual.jogo.estado_jogo_anterior = EstadoJogo.NIVEL3
-        self.nivel_atual.jogo.estado_jogo = EstadoJogo.SAIR
+        self.nivel_atual.jogo.estado_jogo = EstadoJogo.FINAL
 
 class Grade(Parede):
   def __init__(self, pos, surf, groups, porta, z = CAMADAS['main']):

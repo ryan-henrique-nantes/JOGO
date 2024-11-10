@@ -2,8 +2,8 @@
 import tkinter as tk
 from pygame.math import Vector2
 
-ALTURA_TELA = tk.Tk().winfo_screenheight() - 200
-LARGURA_TELA = tk.Tk().winfo_screenwidth() - 200
+ALTURA_TELA = tk.Tk().winfo_screenheight() - 100
+LARGURA_TELA = tk.Tk().winfo_screenwidth() - 100
 TAMANHO = 32
 
 def ajustar_resolucao():
@@ -11,8 +11,8 @@ def ajustar_resolucao():
 
 # Obtenha a resolução da tela do usuário
   root = tk.Tk()
-  ALTURA_TELA = root.winfo_screenheight() - 200
-  LARGURA_TELA = root.winfo_screenwidth() - 200
+  ALTURA_TELA = root.winfo_screenheight() - 100
+  LARGURA_TELA = root.winfo_screenwidth() - 100
   root.destroy()
 
   # Ajuste o tamanho dos elementos do jogo conforme necessário

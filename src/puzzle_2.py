@@ -37,7 +37,7 @@ class Puzzle_2:
       for x, y, surf in tmx_data.get_layer_by_name(camada).tiles():
         Generic((x * TAMANHO, y * TAMANHO), surf, self.all_sprites, CAMADAS['base_puzzle'])
 
-    for camada in ['inicio1', 'fim1', 'linha1', 'chama', 'pergunta1']:
+    for camada in ['inicio1', 'fim1', 'linhas', 'colocarforno', 'aguardar', 'tempo', 'sim', 'nao']:   
       for x, y, surf in tmx_data.get_layer_by_name(camada).tiles():
         Generic((x * TAMANHO, y * TAMANHO), surf, [self.all_sprites], CAMADAS['puzzle'])
 

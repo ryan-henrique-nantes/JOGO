@@ -7,25 +7,25 @@
   <image source="tilesets/FG_Cellar_A5.png" width="256" height="512"/>
  </tileset>
  <tileset firstgid="385" name="inicio1" tilewidth="64" tileheight="55" tilecount="1" columns="1">
-  <image source="pecas_nivel1/inicio1.png" width="64" height="55"/>
+  <image source="puzzle_nivel1/inicio1.png" width="64" height="55"/>
  </tileset>
  <tileset firstgid="386" name="linha1" tilewidth="64" tileheight="55" tilecount="1" columns="1">
-  <image source="pecas_nivel1/linha1.png" width="64" height="55"/>
+  <image source="puzzle_nivel1/linha1.png" width="64" height="55"/>
  </tileset>
  <tileset firstgid="387" name="soma2" tilewidth="64" tileheight="55" tilecount="1" columns="1">
-  <image source="pecas_nivel1/soma2.png" width="64" height="55"/>
+  <image source="puzzle_nivel1/soma2.png" width="64" height="55"/>
  </tileset>
  <tileset firstgid="388" name="peca2" tilewidth="64" tileheight="55" tilecount="1" columns="1">
-  <image source="pecas_nivel1/peca2.png" width="64" height="55"/>
+  <image source="puzzle_nivel1/peca2.png" width="64" height="55"/>
  </tileset>
  <tileset firstgid="389" name="peca" tilewidth="64" tileheight="55" tilecount="1" columns="1">
-  <image source="pecas_nivel1/peca.png" width="64" height="55"/>
+  <image source="puzzle_nivel1/peca.png" width="64" height="55"/>
  </tileset>
  <tileset firstgid="390" name="fim1" tilewidth="64" tileheight="55" tilecount="1" columns="1">
-  <image source="pecas_nivel1/fim1.png" width="64" height="55"/>
+  <image source="puzzle_nivel1/fim1.png" width="64" height="55"/>
  </tileset>
  <tileset firstgid="391" name="encaixe" tilewidth="64" tileheight="55" tilecount="1" columns="1">
-  <image source="pecas_nivel1/encaixe.png" width="64" height="55"/>
+  <image source="puzzle_nivel1/encaixe.png" width="64" height="55"/>
  </tileset>
  <layer id="4" name="fundo" width="30" height="20" locked="1">
   <data encoding="csv">

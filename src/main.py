@@ -59,8 +59,8 @@ class Jogo:
     introducao_texto = (
       "Você foi desafiado pelo seus amigos a se aventurar em um castelo abandonado, "
       "mas acabou preso. Seu objetivo é escapar desse castelo utilizando fluxogramas. "
-      "A partir desta sala em diante contém desafios que você precisará desvendar para "
-      "chegar a saída, envolvendo sequencial, condição e loop. Há peças espalhadas pela sala, "
+      "A partir desta sala existe desafios que você precisará desvendar para "
+      "chegar a saída, envolvendo estrutura sequencial, condição e repetição (loop). Há peças espalhadas pela sala, "
       "você deve juntá-las para completar o painel em frente à porta."
     )
     continuar_texto = "Aperte 'Enter' para continuar"
